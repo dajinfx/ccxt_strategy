@@ -171,10 +171,10 @@ if __name__ == "__main__":
     timeframe = '5m';
     limit =100;
 
-    host = 'localhost'
+    host = '****'
     user = 'root'
-    password = 'Mysql1234!'
-    database = 'cryptotrade'
+    password = '****'
+    database = '****'
     auth_plugin = 'mysql_native_password'
     db = Order_db_connection(host,user,password,database,auth_plugin)
 
