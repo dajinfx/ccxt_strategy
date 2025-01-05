@@ -9,6 +9,7 @@ import datetime
 import schedule
 from Order_db_connection import Order_db_connection 
 from Logger import Logger
+import json
 
 class Scalping_1:
     def __init__(self, bot_1,api_1,symbol_1,symbol_2, order_size,order_profit,order_canbuy_1,order_cansell_1,text,root_path,record_filename,db,logPath):
@@ -38,7 +39,7 @@ class Scalping_1:
         # 获取 RSI 的完整序列
         rsi_series = rsi.rsi()
         df['rsi'] = rsi.rsi()
-        print("rsi:  ",rsi_series.iloc[-1])
+        
 
         if(rsi_series.iloc[-1]<14):
             print("buy signal true")
@@ -46,6 +47,7 @@ class Scalping_1:
             logger_msg = Logger(self.logPath)
             message = "buySignal:  ",df['rsi'].iloc[-1]
             logger_msg.write_log(message)
+            print("rsi:  ",rsi_series.iloc[-1])
 
             return True;
         return False
@@ -85,20 +87,15 @@ class Scalping_1:
             trade_side = row[7]
             trade_id   = row[1]
             trade_size = row[8]
-            trade_price = row[8]
+            trade_price = row[6]
             break;
         
-        print("lengh:   ",len(result))
-
         df = self.api_1.fetch_ohlcv(self.symbol,timeframe, limit );
 
         #得到指标值
         buy_signal = self.check_buy_1_signal(df)
         sell_signal = self.check_sell_1_signal(df)
         
-        #策略执行
-        print('len(csvRows)')
-        #查看excel 如果没有open 的单子，那就开单
 
         if buy_signal:
             print(f"{pd.Timestamp.now()} - Buy signal! RSI is below 25.")
@@ -153,14 +150,24 @@ class Scalping_1:
         now = datetime.datetime.now()
         formatted_now = now.strftime("%Y/%m/%d %H:%M:%S")                
         print('execute_strategy End: ',formatted_now)
-        
+
+def read_dbinfo(dbInfo_filepath):
+    with open(dbInfo_filepath, 'r') as file:
+        db_info = json.load(file)
+        host = db_info ['host']
+        user = db_info ['user']
+        password = db_info ['password']
+        database = db_info ['database']
+        auth_plugin = db_info ['auth_plugin']
+    return host,user,password,database,auth_plugin
+
 if __name__ == "__main__":
     # Configuration
     exchange_name = 'binance'
     root_path = "D:/TradeData/ccxtdoc"
     api_key_file = "Binance/APIKey.txt"
     leverage = 1
-    logPath = root_path + 'Binance/log_scalping_DOGE.txt'
+    logPath = root_path + '/Binance/log_scalping_DOGE.txt'
 
     symbol_1 = 'DOGE'
     symbol_2 = 'USDT'
@@ -175,14 +182,12 @@ if __name__ == "__main__":
     order_cansell_1 = 0;
     timeframe = '5m';
     limit =100;
-
-    host = '****'
-    user = 'root'
-    password = '****'
-    database = '****'
-    auth_plugin = 'mysql_native_password'
+    
+    dbInfo_filepath = root_path+"/DBInfo/db_info.txt"  
+    host, user,password,database,auth_plugin = read_dbinfo(dbInfo_filepath)
     db = Order_db_connection(host,user,password,database,auth_plugin)
 
+    # Initialize Get API
     api_1 = ExchangeAPI(root_path, api_key_file, exchange_name, leverage, symbol, trade_type)
     # Initialize TradingBot
     bot_1 = TradingBot(root_path, api_key_file, exchange_name, leverage, symbol, trade_type, text,record_filename,db)

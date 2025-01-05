@@ -9,6 +9,7 @@ import datetime
 import schedule
 from Order_db_connection import Order_db_connection 
 from Logger import Logger
+import json
 
 class Scalping_1:
     def __init__(self, bot_1,api_1,symbol_1,symbol_2, order_size,order_profit,order_canbuy_1,order_cansell_1,text,root_path,record_filename,db,logPath):
@@ -148,7 +149,17 @@ class Scalping_1:
         now = datetime.datetime.now()
         formatted_now = now.strftime("%Y/%m/%d %H:%M:%S")                
         print('execute_strategy End: ',formatted_now)
-        
+
+def read_dbinfo(dbInfo_filepath):
+    with open(dbInfo_filepath, 'r') as file:
+        db_info = json.load(file)
+        host = db_info ['host']
+        user = db_info ['user']
+        password = db_info ['password']
+        database = db_info ['database']
+        auth_plugin = db_info ['auth_plugin']
+    return host,user,password,database,auth_plugin      
+  
 if __name__ == "__main__":
     # Configuration
     exchange_name = 'binance'
@@ -171,11 +182,8 @@ if __name__ == "__main__":
     timeframe = '5m';
     limit =100;
 
-    host = '****'
-    user = 'root'
-    password = '****'
-    database = '****'
-    auth_plugin = 'mysql_native_password'
+    dbInfo_filepath = root_path+"/DBInfo/db_info.txt"  
+    host, user,password,database,auth_plugin = read_dbinfo(dbInfo_filepath)
     db = Order_db_connection(host,user,password,database,auth_plugin)
 
     api_1 = ExchangeAPI(root_path, api_key_file, exchange_name, leverage, symbol, trade_type)
