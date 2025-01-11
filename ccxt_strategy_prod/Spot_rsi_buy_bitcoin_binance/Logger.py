@@ -15,11 +15,13 @@ class Logger:
         directory = os.path.dirname(self.file_path)
         # 创建目录（如果目录不存在）
         if directory and not os.path.exists(directory):
+            print("create file self.file_path: ",self.file_path)
             os.makedirs(directory)
 
     def write_log(self, message):
         current_time = datetime.now().strftime("%Y/%m/%d %I:%M:%S %p")
         log_entry = f"------ {current_time} -----{message}\n"
+        print("write_log: ",message)
         
         # 写入日志文件前检查文件行数
         self.check_and_trim_log_file()

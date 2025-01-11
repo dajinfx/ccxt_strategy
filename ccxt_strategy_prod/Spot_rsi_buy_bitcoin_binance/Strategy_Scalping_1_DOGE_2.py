@@ -10,15 +10,15 @@ import schedule
 from Order_db_connection import Order_db_connection 
 from Logger import Logger
 import json
+import os
 
 class Scalping_1:
-    def __init__(self, bot_1,api_1,symbol_1,symbol_2, order_size,order_profit,order_canbuy_1,order_cansell_1,text,root_path,record_filename,db,logPath):
+    def __init__(self, bot_1,api_1,symbol_1,symbol_2, order_size,order_profit,order_canbuy_1,order_cansell_1,text,root_path,db,logPath):
         self.bot_1 = bot_1
         self.api_1 = api_1
         
         self.text = text
         self.root_path = root_path
-        self.record_filename = record_filename
         self.symbol_1 = symbol_1
         self.symbol_2 = symbol_2
         self.symbol   = symbol_1 + "/" + symbol_2
@@ -41,7 +41,7 @@ class Scalping_1:
         df['rsi'] = rsi.rsi()
         
 
-        if(rsi_series.iloc[-1]<14):
+        if(rsi_series.iloc[-1]<50):
             print("buy signal true")
             
             logger_msg = Logger(self.logPath)
@@ -49,7 +49,7 @@ class Scalping_1:
             logger_msg.write_log(message)
             print("rsi:  ",rsi_series.iloc[-1])
 
-            return True;
+            return False;
         return False
     
     def check_sell_1_signal(self, df, rsi_threshold=14):
@@ -61,10 +61,10 @@ class Scalping_1:
         # 最后一个K线 rsi的 值
         print("rsi:  ",rsi_series.iloc[-1])
 
-        if(rsi_series.iloc[-1]>55):
+        if(rsi_series.iloc[-1]>65):
             print("sell signal true")
             return True;
-        return False
+        return True
 
     def check_balance(self):
         balance = self.api_1.fetch_balance()
@@ -74,6 +74,11 @@ class Scalping_1:
         print("total_asset: ",total_asset)
 
     def execute_strategy(self):
+        logger_msg = Logger(self.logPath)
+        message = "------------"
+        print("self.logPath: ",self.logPath,"   message: ",message)
+        logger_msg.write_log(message)
+
         print('execute_strategy start')
         #openCsv = OperationCSV(self.root_path,self.record_filename)
 
@@ -100,9 +105,8 @@ class Scalping_1:
         if buy_signal:
             print(f"{pd.Timestamp.now()} - Buy signal! RSI is below 25.")
             price, bid, ask, spread = self.bot_1.get_market_info()
-            order = self.bot_1.send_order_open('market', 'buy', self.size, ask,'open') 
+            order = self.bot_1.send_order_open('market', 'buy', self.size, ask,trade_id,'open') 
 
-            logger_msg = Logger(self.file_path)
             message = "buy open"
             logger_msg.write_log(message)
 
@@ -112,9 +116,7 @@ class Scalping_1:
             price, bid, ask, spread = self.bot_1.get_market_info()
             order = self.bot_1.send_order_open('market', 'sell', self.size, bid,'open')
         '''
-                
-        #查看database 如果有open单子， 那就平仓   
-        
+         
         if len(result)>0: #如果没有 空仓，或者已经都平仓
             print("opened trade_side: ",trade_side)
             print("sell_signal: ",sell_signal)
@@ -129,7 +131,6 @@ class Scalping_1:
                         #if profit_total > self.profit:
                         order = self.bot_1.send_order_open('market', 'sell', self.size, bid, trade_id,'close')
                         
-                        logger_msg = Logger(self.logPath)
                         message = "buy close"
                         logger_msg.write_log(message)
 
@@ -143,7 +144,6 @@ class Scalping_1:
                     price, bid, ask, spread = self.bot_1.get_market_info()
                     order = self.bot_1.send_order_open('market', 'buy', self.size, ask, trade_id,'close') 
                                 
-                    logger_msg = Logger(self.logPath)
                     message = "sell close"
                     logger_msg.write_log(message)
 
@@ -167,21 +167,22 @@ if __name__ == "__main__":
     root_path = "D:/TradeData/ccxtdoc"
     api_key_file = "Binance/APIKey.txt"
     leverage = 1
-    logPath = root_path + '/Binance/log_scalping_DOGE.txt'
+    
+    current_folder_path = os.path.dirname(os.path.abspath(__file__))
+    logPath = current_folder_path + '/LogBinance/log_scalping_DOGE.txt'
 
     symbol_1 = 'DOGE'
     symbol_2 = 'USDT'
     symbol = symbol_1 + "/" + symbol_2
     trade_type = 'spot'
     text = "dajin_DOGE_RSI_Buy"
-    record_filename = "Z_Strategy_DOGE_RSI_Buy.csv"
 
     order_size = 10;
     order_profit = 0.1;
     order_canbuy_1 = 1;
     order_cansell_1 = 0;
     timeframe = '5m';
-    limit =100;
+    limit =50;
     
     dbInfo_filepath = root_path+"/DBInfo/db_info.txt"  
     host, user,password,database,auth_plugin = read_dbinfo(dbInfo_filepath)
@@ -190,11 +191,11 @@ if __name__ == "__main__":
     # Initialize Get API
     api_1 = ExchangeAPI(root_path, api_key_file, exchange_name, leverage, symbol, trade_type)
     # Initialize TradingBot
-    bot_1 = TradingBot(root_path, api_key_file, exchange_name, leverage, symbol, trade_type, text,record_filename,db)
+    bot_1 = TradingBot(root_path, api_key_file, exchange_name, leverage, symbol, trade_type, text,db,logPath)
     
     
     # Initialize Scalping_1 Strategy
-    scalping_strategy = Scalping_1(bot_1,api_1,symbol_1,symbol_2,order_size,order_profit,order_canbuy_1,order_cansell_1 ,text,root_path,record_filename,db,logPath)
+    scalping_strategy = Scalping_1(bot_1,api_1,symbol_1,symbol_2,order_size,order_profit,order_canbuy_1,order_cansell_1 ,text,root_path,db,logPath)
         # Schedule the strategy to run every minute
 
     scalping_strategy.check_balance()  

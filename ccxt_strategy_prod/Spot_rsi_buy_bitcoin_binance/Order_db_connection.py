@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Dec  1 21:42:38 2024
-
 @author: USER
 """
 
@@ -11,28 +10,20 @@ from mysql.connector import Error
 
 class Order_db_connection:
     def __init__(self, host, user,password,database,auth_plugin):
-        self.host = 'localhost'
-        self.user = 'root'
-        self.password = 'Mysql1234!'
-        self.database = 'cryptotrade'
-        self.auth_plugin = 'mysql_native_password'
-        
-        '''
         self.host = host
         self.user = user
         self.password = password
         self.database = database
         self.auth_plugin = auth_plugin
-        '''
 
     # 配置数据库连接信息
     def insert_into(self,insert_query,data):
         try:
             # 建立连接
             connection = mysql.connector.connect(
-                host=self.host,        # 数据库服务器地址
-                user=self.user,             # 用户名
-                password=self.password, # 密码
+                host=self.host,           # 数据库服务器地址
+                user=self.user,           # 用户名
+                password=self.password,   # 密码
                 database=self.database ,  # 数据库名称
                 auth_plugin=self.auth_plugin,
             )

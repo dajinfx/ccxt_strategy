@@ -1,9 +1,11 @@
 from Demo_apikey_oop import ExchangeAPI
 from Demo_insert_csv import OperationCSV
 from datetime import datetime
+from Logger import Logger
+import ccxt
 
 class TradingBot:
-    def __init__(self, root_path, api_key_file, exchange_name, leverage, symbol, trade_type, text,record_filename,db):
+    def __init__(self, root_path, api_key_file, exchange_name, leverage, symbol, trade_type, text,db,logPath):
         self.root_path = root_path
         self.api_key_file = api_key_file
         self.exchange_name = exchange_name
@@ -11,8 +13,8 @@ class TradingBot:
         self.symbol = symbol
         self.trade_type = trade_type
         self.text = text
-        self.record_filename = record_filename,
         self.db  = db 
+        self.logPath = logPath
         
         # Initialize ExchangeAPI
         self.exchange_api = ExchangeAPI(root_path, api_key_file, exchange_name, leverage, symbol, trade_type)
@@ -74,14 +76,18 @@ class TradingBot:
                 price,
                 side,
                 amount,
-                formatted_time
+                formatted_time 
                 )
             ]
         else:
-            query = "update strategy_binance set str_status = 'close' where str_order_id = %s;"
-            values = (trade_id,) 
+            query = "update strategy_binance set str_status = 'close', str_close_price = %s,str_close_direction=%s,str_close_size=%s where str_order_id = %s;"
+            values = [(price,side,amount,trade_id)]
 
         print("query:  ",query)
+        logger_msg = Logger(self.logPath)
+        msg_value = "price: "+str(price)+"  side: "+side+"  amount: "+str(amount)+"  trade_id: "+trade_id;
+        message = "query:  "+query+"\n"+msg_value
+        logger_msg.write_log(message)
         self.db.insert_into(query,values)
 
     def close_position(self,price, amount, text):
@@ -116,17 +122,29 @@ class TradingBot:
         colvalue.clear();
     
     def send_order_open(self, order_type, order_side, amount, price, trade_id,open_close):
-        order = self.exchange_api.create_order(self.symbol, order_type, order_side, amount, price, self.text)
-        #self._record_order(order, price, order_side, amount)
-        now = datetime.now()
+        try:
+            order = self.exchange_api.create_order(self.symbol, order_type, order_side, amount, price, self.text)
+            #self._record_order(order, price, order_side, amount)
+            now = datetime.now()
 
-        # 格式化时间为 YYYYmmdd:hhss 格式
-        formatted_time = now.strftime("%Y%m%d:%H%S")
-        print(formatted_time)
-        print(order)
-        order_id = now.strftime("%Y%m%d%H%S")
-        self._record_order_db(self.exchange_name, self.symbol,order_type, order_id,price, order_side, amount,formatted_time, trade_id,open_close)
-        
+            # 格式化时间为 YYYYmmdd:hhss 格式
+            formatted_time = now.strftime("%Y%m%d:%H%S")
+            print(formatted_time)
+            print(order)
+
+            logger_msg = Logger(self.logPath)
+            message = "order success "+order_side
+            logger_msg.write_log(message)
+
+            order_id = now.strftime("%Y%m%d%H%S")
+            self._record_order_db(self.exchange_name, self.symbol,order_type, order_id,price, order_side, amount,formatted_time, trade_id,open_close)
+        except ccxt.BaseError as e:
+            print("成交订单时出错:", str(e))
+            logger_msg = Logger(self.logPath)
+            message = "Error msg:  "+str(e)
+            logger_msg.write_log(message)
+            return None  
+
         return True
 
     def send_order_close(self,price,amount):
