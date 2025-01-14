@@ -41,7 +41,7 @@ class Scalping_1:
         df['rsi'] = rsi.rsi()
         
 
-        if(rsi_series.iloc[-1]<50):
+        if(rsi_series.iloc[-1]<45):
             print("buy signal true")
             
             logger_msg = Logger(self.logPath)
@@ -49,7 +49,7 @@ class Scalping_1:
             logger_msg.write_log(message)
             print("rsi:  ",rsi_series.iloc[-1])
 
-            return False;
+            return True;
         return False
     
     def check_sell_1_signal(self, df, rsi_threshold=14):
@@ -61,10 +61,10 @@ class Scalping_1:
         # 最后一个K线 rsi的 值
         print("rsi:  ",rsi_series.iloc[-1])
 
-        if(rsi_series.iloc[-1]>65):
+        if(rsi_series.iloc[-1]>70):
             print("sell signal true")
             return True;
-        return True
+        return False
 
     def check_balance(self):
         balance = self.api_1.fetch_balance()
@@ -117,7 +117,7 @@ class Scalping_1:
             order = self.bot_1.send_order_open('market', 'sell', self.size, bid,'open')
         '''
          
-        if len(result)>0: #如果没有 空仓，或者已经都平仓
+        if len(result)>0: #如果尚有敞口
             print("opened trade_side: ",trade_side)
             print("sell_signal: ",sell_signal)
             print("buy_signal:  ",buy_signal)
@@ -126,7 +126,7 @@ class Scalping_1:
                     print('go to sell')
                     #profit, fees, profit_total, initialMargin, entryPrice, amounts, entrydirection, leverage = self.bot_1.get_position_info()
                     price, bid, ask, spread = self.bot_1.get_market_info()
-
+                    #trade_price = trade_price+(trade_price*0.1)
                     if bid > trade_price:
                         #if profit_total > self.profit:
                         order = self.bot_1.send_order_open('market', 'sell', self.size, bid, trade_id,'close')

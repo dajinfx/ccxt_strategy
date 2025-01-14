@@ -1,3 +1,67 @@
+------ 2025/01/14 07:09:22 PM -----buy open
+------ 2025/01/14 07:09:22 PM -----order success 
+------ 2025/01/14 07:09:22 PM -----query:  insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2,                                     str_open_price, str_open_direction, str_open_size, str_open_time)                                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+order_id: 20250114190922   price: 0.35166  side: buy  amount: 10   formatted_time: 20250114:190922  trade_id: 202501141835
+------ 2025/01/14 07:09:20 PM -----------------
+------ 2025/01/14 06:55:36 PM -----------------
+------ 2025/01/14 06:49:43 PM -----buy close
+------ 2025/01/14 06:49:43 PM -----order success sell  order_id: 20250114180143   formatted_time: 20250114:180143   now: 2025-01-14 18:49:43.875510
+------ 2025/01/14 06:49:43 PM -----query:  update strategy_binance set str_status = 'close', str_close_price = %s,str_close_direction=%s,str_close_size=%s where str_order_id = %s;
+order_id: 20250114180143   price: 0.35312  side: sell  amount: 10   formatted_time: 20250114:180143  trade_id: 202501141819
+------ 2025/01/14 06:49:43 PM -----buy open
+------ 2025/01/14 06:49:43 PM -----order success buy  order_id: 20250114180143   formatted_time: 20250114:180143   now: 2025-01-14 18:49:43.683482
+------ 2025/01/14 06:49:43 PM -----query:  insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2,                                     str_open_price, str_open_direction, str_open_size, str_open_time)                                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+order_id: 20250114180143   price: 0.35313  side: buy  amount: 10   formatted_time: 20250114:180143  trade_id: 202501141819
+------ 2025/01/14 06:49:41 PM -----------------
+------ 2025/01/14 06:35:43 PM -----buy close
+------ 2025/01/14 06:35:43 PM -----order success sell  order_id: 202501141843   formatted_time: 20250114:1843   now: 2025-01-14 18:35:43.065116
+------ 2025/01/14 06:35:43 PM -----query:  update strategy_binance set str_status = 'close', str_close_price = %s,str_close_direction=%s,str_close_size=%s where str_order_id = %s;
+order_id: 202501141843   price: 0.35022  side: sell  amount: 10   formatted_time: 20250114:1843  trade_id: 202501141820
+------ 2025/01/14 06:35:42 PM -----buy open
+------ 2025/01/14 06:35:42 PM -----order success buy  order_id: 202501141842   formatted_time: 20250114:1842   now: 2025-01-14 18:35:42.826824
+------ 2025/01/14 06:35:42 PM -----query:  insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2,                                     str_open_price, str_open_direction, str_open_size, str_open_time)                                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+order_id: 202501141842   price: 0.35021  side: buy  amount: 10   formatted_time: 20250114:1842  trade_id: 202501141820
+------ 2025/01/14 06:35:41 PM -----------------
+------ 2025/01/14 06:34:40 PM -----query:  insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2,                                     str_open_price, str_open_direction, str_open_size, str_open_time)                                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+order_id: 202501141840   price: 0.3501  side: buy  amount: 10   formatted_time: 20250114:1840  trade_id: 202501141820
+------ 2025/01/14 06:34:38 PM -----------------
+------ 2025/01/14 06:25:36 PM -----buy close
+------ 2025/01/14 06:25:36 PM -----order success sell
+------ 2025/01/14 06:25:36 PM -----query:  update strategy_binance set str_status = 'close', str_close_price = %s,str_close_direction=%s,str_close_size=%s where str_order_id = %s;
+order_id: 202501141836   price: 0.34891  side: sell  amount: 10   formatted_time: 20250114:1836  trade_id: 202501141620
+------ 2025/01/14 06:25:35 PM -----buy open
+------ 2025/01/14 06:25:35 PM -----order success buy
+------ 2025/01/14 06:25:35 PM -----query:  insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2,                                     str_open_price, str_open_direction, str_open_size, str_open_time)                                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+order_id: 202501141835   price: 0.34887  side: buy  amount: 10   formatted_time: 20250114:1835  trade_id: 202501141620
+------ 2025/01/14 06:25:33 PM -----------------
+------ 2025/01/14 06:21:57 PM -----buy open
+------ 2025/01/14 06:21:57 PM -----order success buy
+------ 2025/01/14 06:21:57 PM -----query:  insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2,                                     str_open_price, str_open_direction, str_open_size, str_open_time)                                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+order_id: 202501141857   price: 0.34685  side: buy  amount: 10   formatted_time: 20250114:1857  trade_id: 202501141320
+------ 2025/01/14 06:21:55 PM -----------------
+------ 2025/01/14 06:10:56 PM -----buy open
+------ 2025/01/14 06:10:56 PM -----order success buy
+------ 2025/01/14 06:10:56 PM -----query:  insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2,                                     str_open_price, str_open_direction, str_open_size, str_open_time)                                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+order_id: 202501141856price: 0.34544  side: buy  amount: 10   formatted_time: 20250114:1856  trade_id: 202501141320
+------ 2025/01/14 06:10:54 PM -----------------
+------ 2025/01/14 06:09:43 PM -----------------
+------ 2025/01/14 05:47:55 PM -----------------
+------ 2025/01/14 05:43:43 PM -----------------
+------ 2025/01/14 05:34:17 PM -----------------
+------ 2025/01/14 05:34:01 PM -----------------
+------ 2025/01/14 05:31:22 PM -----------------
+------ 2025/01/14 05:30:24 PM -----------------
+------ 2025/01/14 05:29:46 PM -----------------
+------ 2025/01/14 05:29:22 PM -----------------
+------ 2025/01/14 05:28:28 PM -----------------
+------ 2025/01/14 05:27:55 PM -----------------
+------ 2025/01/12 07:46:51 AM -----------------
+------ 2025/01/11 10:07:09 PM -----buy open
+------ 2025/01/11 10:07:09 PM -----query:  insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2,                                     str_open_price, str_open_direction, str_open_size, str_open_time)                                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+price: 0.33635  side: buy  amount: 10  trade_id: 
+------ 2025/01/11 10:07:09 PM -----order success buy
+------ 2025/01/11 10:07:09 PM -----('buySignal:  ', 43.86777472553692)
+------ 2025/01/11 10:07:07 PM -----------------
 ------ 2025/01/11 09:07:32 AM -----buy close
 ------ 2025/01/11 09:07:32 AM -----query:  update strategy_binance set str_status = 'close', str_close_price = %s,str_close_direction=%s,str_close_size=%s where str_order_id = %s;
 price: 0.3337  side: sell  amount: 10  trade_id: 202501100820

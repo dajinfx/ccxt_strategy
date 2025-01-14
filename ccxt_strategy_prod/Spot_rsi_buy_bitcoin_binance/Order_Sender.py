@@ -58,8 +58,8 @@ class TradingBot:
         colvalue.clear();
     
    
-    def _record_order_db(self,exchange_name, symbol, order_type, order, price, side, amount,formatted_time, trade_id,open_close):
-
+    def _record_order_db(self,exchange_name, symbol, order_type, order_id, price, side, amount,formatted_time, trade_id,open_close):
+        
         if open_close == 'open':
             query = "insert into strategy_binance (str_order_id, str_platform, str_market, str_symbol_1, str_symbol_2, \
                                     str_open_price, str_open_direction, str_open_size, str_open_time)\
@@ -68,7 +68,7 @@ class TradingBot:
             pair = symbol
             base, quote = pair.split("/")
             values = [(
-                order,
+                order_id,
                 exchange_name,
                 order_type,
                 base,
@@ -85,7 +85,7 @@ class TradingBot:
 
         print("query:  ",query)
         logger_msg = Logger(self.logPath)
-        msg_value = "price: "+str(price)+"  side: "+side+"  amount: "+str(amount)+"  trade_id: "+trade_id;
+        msg_value = "order_id: "+order_id+"   price: "+str(price)+"  side: "+side+"  amount: "+str(amount)+"   formatted_time: "+formatted_time+"  trade_id: "+trade_id;
         message = "query:  "+query+"\n"+msg_value
         logger_msg.write_log(message)
         self.db.insert_into(query,values)
@@ -128,16 +128,18 @@ class TradingBot:
             now = datetime.now()
 
             # 格式化时间为 YYYYmmdd:hhss 格式
-            formatted_time = now.strftime("%Y%m%d:%H%S")
+            formatted_time = now.strftime("%Y%m%d:%H%M%S")
             print(formatted_time)
             print(order)
 
+            order_id = now.strftime("%Y%m%d%H%M%S")
+            self._record_order_db(self.exchange_name, self.symbol,order_type, order_id,price, order_side, amount,formatted_time, trade_id,open_close)
+            
             logger_msg = Logger(self.logPath)
-            message = "order success "+order_side
+            message = "order success "
             logger_msg.write_log(message)
 
-            order_id = now.strftime("%Y%m%d%H%S")
-            self._record_order_db(self.exchange_name, self.symbol,order_type, order_id,price, order_side, amount,formatted_time, trade_id,open_close)
+            print("formatted_time: ", formatted_time,"  now:  ",now,"    order_id:  ",order_id)
         except ccxt.BaseError as e:
             print("成交订单时出错:", str(e))
             logger_msg = Logger(self.logPath)
